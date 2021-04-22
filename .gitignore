@@ -1,2 +1,5 @@
 .idea
 oops.iml
+.packages
+build
+.dart_tool
