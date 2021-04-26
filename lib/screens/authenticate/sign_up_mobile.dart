@@ -1,12 +1,16 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
-class SignIn extends StatefulWidget {
+class SignUpMobile extends StatefulWidget {
+  final Function toggleView;
+
+  SignUpMobile({this.toggleView});
+
   @override
-  _SignInState createState() => _SignInState();
+  _SignUpMobileState createState() => _SignUpMobileState();
 }
 
-class _SignInState extends State<SignIn> {
+class _SignUpMobileState extends State<SignUpMobile> {
   final _formKey = GlobalKey<FormState>();
 
   bool _obscurePassword = true;
@@ -18,34 +22,19 @@ class _SignInState extends State<SignIn> {
         scrollDirection: Axis.vertical,
         child: Container(
           width: MediaQuery.of(context).size.width,
-          height: MediaQuery.of(context).size.height * 1.3,
+          height: MediaQuery.of(context).size.height * 1.4,
           color: Colors.white,
           child: Stack(
             children: [
               Positioned.fill(
-                top: 250,
                 child: Align(
                   alignment: Alignment.topCenter,
                   child: Container(
-                    width: 500,
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.vertical(
-                          top: Radius.circular(30),
-                          bottom: Radius.circular(10)),
-                      color: Colors.white,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.5),
-                          spreadRadius: 0.5,
-                          blurRadius: 0.5, // changes position of shadow
-                        ),
-                      ],
-                    ),
+                    width: MediaQuery.of(context).size.width,
                     child: Form(
                       key: _formKey,
                       child: ListView(
-                        padding: EdgeInsets.only(left: 60, right: 60),
+                        padding: EdgeInsets.only(left: 10, right: 10),
                         children: [
                           Container(
                             alignment: Alignment.centerLeft,
@@ -57,6 +46,49 @@ class _SignInState extends State<SignIn> {
                                 fontFamily: 'Mulish',
                                 fontStyle: FontStyle.normal,
                                 fontSize: 24,
+                              ),
+                            ),
+                          ),
+                          Container(
+                            padding: EdgeInsets.only(bottom: 10),
+                            child: TextFormField(
+                              style: TextStyle(
+                                color: Colors.grey[600],
+                                fontFamily: 'Mulish',
+                                fontStyle: FontStyle.normal,
+                              ),
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                    width: 0,
+                                    style: BorderStyle.none,
+                                  ),
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 20),
+                                fillColor: const Color(0xFFE0E0E0),
+                                focusColor: const Color(0xFFBFBFBD),
+                                filled: true,
+                                hintStyle: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontFamily: 'Mulish',
+                                  fontStyle: FontStyle.normal,
+                                ),
+                                hintText: 'Digite seu nome',
+                                suffixIcon: Padding(
+                                  padding: EdgeInsets.only(right: 10),
+                                  child: IconButton(
+                                    icon: Icon(
+                                      Icons.person,
+                                      color: Colors.black,
+                                      size: 26,
+                                    ),
+                                    onPressed: () => null,
+                                  ),
+                                ),
                               ),
                             ),
                           ),
@@ -88,7 +120,7 @@ class _SignInState extends State<SignIn> {
                                   fontFamily: 'Mulish',
                                   fontStyle: FontStyle.normal,
                                 ),
-                                hintText: 'Email',
+                                hintText: 'Digite seu e-mail',
                                 suffixIcon: Padding(
                                   padding: EdgeInsets.only(right: 10),
                                   child: IconButton(
@@ -132,7 +164,7 @@ class _SignInState extends State<SignIn> {
                                   fontFamily: 'Mulish',
                                   fontStyle: FontStyle.normal,
                                 ),
-                                hintText: 'Senha',
+                                hintText: 'Crie uma senha',
                                 suffixIcon: Padding(
                                   padding: EdgeInsets.only(right: 10),
                                   child: IconButton(
@@ -154,22 +186,59 @@ class _SignInState extends State<SignIn> {
                             ),
                           ),
                           Container(
-                            alignment: Alignment.centerLeft,
                             padding: EdgeInsets.only(top: 10),
-                            child: Text(
-                              'Esqueceu a sua senha?',
+                            child: TextFormField(
+                              obscureText: _obscurePassword,
                               style: TextStyle(
-                                color: Colors.blue,
+                                color: Colors.grey[600],
                                 fontFamily: 'Mulish',
                                 fontStyle: FontStyle.normal,
-                                fontSize: 16,
+                              ),
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: const BorderRadius.all(
+                                    const Radius.circular(10.0),
+                                  ),
+                                  borderSide: BorderSide(
+                                    width: 0,
+                                    style: BorderStyle.none,
+                                  ),
+                                ),
+                                contentPadding: EdgeInsets.symmetric(
+                                    horizontal: 20.0, vertical: 20),
+                                fillColor: const Color(0xFFE0E0E0),
+                                focusColor: const Color(0xFFBFBFBD),
+                                filled: true,
+                                hintStyle: TextStyle(
+                                  color: Colors.grey[600],
+                                  fontFamily: 'Mulish',
+                                  fontStyle: FontStyle.normal,
+                                ),
+                                hintText: 'Confirmar senha',
+                                suffixIcon: Padding(
+                                  padding: EdgeInsets.only(right: 10),
+                                  child: IconButton(
+                                    icon: Icon(
+                                      _obscurePassword
+                                          ? Icons.lock_rounded
+                                          : Icons.lock_open_rounded,
+                                      color: Colors.black,
+                                      size: 26,
+                                    ),
+                                    onPressed: () {
+                                      setState(() {
+                                        _obscurePassword = !_obscurePassword;
+                                      });
+                                    },
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                           Container(
                             height: 80,
                             padding:
-                                EdgeInsets.only(left: 40, right: 40, top: 20),
+                            EdgeInsets.only(left: 40, right: 40, top: 20),
                             child: TextButton(
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
@@ -182,7 +251,7 @@ class _SignInState extends State<SignIn> {
                               ),
                               onPressed: () => null,
                               child: Text(
-                                'Entrar',
+                                'Criar',
                                 style: TextStyle(
                                   color: Colors.white,
                                   fontFamily: 'Mulish',
@@ -206,12 +275,12 @@ class _SignInState extends State<SignIn> {
                                 ),
                                 children: <TextSpan>[
                                   TextSpan(
-                                      text: 'Não possui uma conta?',
+                                      text: 'Já possui uma conta? ',
                                       style: TextStyle(color: Colors.black)),
                                   TextSpan(
-                                    text: ' Cadastre - se',
+                                    text: 'Entrar',
                                     recognizer: TapGestureRecognizer()
-                                      ..onTap = () => null,
+                                      ..onTap = () => widget.toggleView(),
                                     style: TextStyle(
                                       color: Colors.blueAccent[700],
                                       decoration: TextDecoration.underline,
@@ -225,20 +294,6 @@ class _SignInState extends State<SignIn> {
                           ),
                         ],
                       ),
-                    ),
-                  ),
-                ),
-              ),
-              Positioned.fill(
-                top: 20,
-                child: Align(
-                  alignment: Alignment.topCenter,
-                  child: Container(
-                    height: 280,
-                    decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage('assets/images/willy0.png'),
-                          fit: BoxFit.fitHeight),
                     ),
                   ),
                 ),
