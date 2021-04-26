@@ -2,6 +2,10 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
 class SignIn extends StatefulWidget {
+  final Function toggleView;
+
+  SignIn({this.toggleView});
+
   @override
   _SignInState createState() => _SignInState();
 }
@@ -211,7 +215,7 @@ class _SignInState extends State<SignIn> {
                                   TextSpan(
                                     text: ' Cadastre - se',
                                     recognizer: TapGestureRecognizer()
-                                      ..onTap = () => null,
+                                      ..onTap = () => widget.toggleView(),
                                     style: TextStyle(
                                       color: Colors.blueAccent[700],
                                       decoration: TextDecoration.underline,
