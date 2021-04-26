@@ -16,10 +16,11 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   @override
   Widget build(BuildContext context) {
-    if (kIsWeb) {
+    // check wether user is on a web browser or on a tablet
+    if (kIsWeb || MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.shortestSide > 600) {
       return SignUpWeb(toggleView: widget.toggleView);
     } else {
-      return SignUpMobile();
+      return SignUpMobile(toggleView: widget.toggleView);
     }
   }
 }
