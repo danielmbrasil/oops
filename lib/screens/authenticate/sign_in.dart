@@ -1,5 +1,7 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:oops/services/sign_in.dart' as service;
 
 class SignIn extends StatefulWidget {
   final Function toggleView;
@@ -12,6 +14,9 @@ class SignIn extends StatefulWidget {
 
 class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
+
+  String _email = '';
+  String _password = '';
 
   bool _obscurePassword = true;
 
@@ -84,8 +89,8 @@ class _SignInState extends State<SignIn> {
                                 ),
                                 contentPadding: EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 20),
-                                fillColor: const Color(0xFFE0E0E0),
-                                focusColor: const Color(0xFFBFBFBD),
+                                fillColor: Colors.grey[200],
+                                focusColor: Colors.grey[300],
                                 filled: true,
                                 hintStyle: TextStyle(
                                   color: Colors.grey[600],
@@ -105,6 +110,19 @@ class _SignInState extends State<SignIn> {
                                   ),
                                 ),
                               ),
+                              onChanged: (value) {
+                                setState(() => _email = value);
+                              },
+                              // Validate if email is not empty and is in a valid format
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Indique seu endereço de email';
+                                } else if (!EmailValidator.validate(_email
+                                    .replaceAll(new RegExp(r"\s+"), ''))) {
+                                  return 'Indique um endereço de email válido';
+                                }
+                                return null;
+                              },
                             ),
                           ),
                           Container(
@@ -128,8 +146,8 @@ class _SignInState extends State<SignIn> {
                                 ),
                                 contentPadding: EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 20),
-                                fillColor: const Color(0xFFE0E0E0),
-                                focusColor: const Color(0xFFBFBFBD),
+                                fillColor: Colors.grey[200],
+                                focusColor: Colors.grey[300],
                                 filled: true,
                                 hintStyle: TextStyle(
                                   color: Colors.grey[600],
@@ -155,6 +173,16 @@ class _SignInState extends State<SignIn> {
                                   ),
                                 ),
                               ),
+                              onChanged: (value) {
+                                setState(() => _password = value);
+                              },
+                              // Validate if password is not empty
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Indique a sua senha';
+                                }
+                                return null;
+                              },
                             ),
                           ),
                           Container(
@@ -184,7 +212,24 @@ class _SignInState extends State<SignIn> {
                                   ),
                                 ),
                               ),
-                              onPressed: () => null,
+                              onPressed: () async {
+                                if (_formKey.currentState.validate()) {
+                                  try {
+                                    await service.SignIn(
+                                            email: _email.replaceAll(
+                                                new RegExp(r'\s+'), ''),
+                                            password: _password.replaceAll(
+                                                new RegExp(r'\s+'), ''))
+                                        .signIn();
+                                  } catch (e) {
+                                    await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            _buildErrorDialog(context,
+                                                e.toString().substring(11)));
+                                  }
+                                }
+                              },
                               child: Text(
                                 'Entrar',
                                 style: TextStyle(
@@ -253,4 +298,51 @@ class _SignInState extends State<SignIn> {
       ),
     );
   }
+}
+
+// Build error dialog with error detail
+Widget _buildErrorDialog(BuildContext context, String errorDetail) {
+  return AlertDialog(
+    title: Text(
+      'Erro',
+      style: TextStyle(
+        fontFamily: 'Mulish',
+        fontStyle: FontStyle.normal,
+        fontSize: 22,
+      ),
+    ),
+    content: Container(
+      constraints: BoxConstraints(maxWidth: 400, minWidth: 200),
+      width: double.infinity,
+      height: 100,
+      alignment: Alignment.center,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            bottom: 50,
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                errorDetail,
+                style: TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  'Fechar',
+                  style: TextStyle(fontSize: 22),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    ),
+  );
 }
