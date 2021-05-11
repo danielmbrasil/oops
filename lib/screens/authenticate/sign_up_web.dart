@@ -1,5 +1,7 @@
+import 'package:email_validator/email_validator.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:oops/services/sign_up.dart';
 
 class SignUpWeb extends StatefulWidget {
   final Function toggleView;
@@ -12,6 +14,11 @@ class SignUpWeb extends StatefulWidget {
 
 class _SignUpWebState extends State<SignUpWeb> {
   final _formKey = GlobalKey<FormState>();
+
+  String _name = '';
+  String _email = '';
+  String _password = '';
+  String _passwordConfirmation = '';
 
   bool _obscurePassword = true;
 
@@ -84,8 +91,8 @@ class _SignUpWebState extends State<SignUpWeb> {
                                 ),
                                 contentPadding: EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 20),
-                                fillColor: const Color(0xFFE0E0E0),
-                                focusColor: const Color(0xFFBFBFBD),
+                                fillColor: Colors.grey[200],
+                                focusColor: Colors.grey[300],
                                 filled: true,
                                 hintStyle: TextStyle(
                                   color: Colors.grey[600],
@@ -105,6 +112,22 @@ class _SignUpWebState extends State<SignUpWeb> {
                                   ),
                                 ),
                               ),
+                              onChanged: (value) {
+                                setState(() => _name = value);
+                              },
+                              // Validate if name is not empty and if it doesn't contain numbers nor symbols
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Indique seu nome.';
+                                }
+                                if ((new RegExp(
+                                        r'[!@#<>?":_`~;[\]\\|=+)(*&^%0-9-]',
+                                        multiLine: false)
+                                    .hasMatch(value))) {
+                                  return 'Nomes não devem conter números ou símbolos';
+                                }
+                                return null;
+                              },
                             ),
                           ),
                           Container(
@@ -127,8 +150,8 @@ class _SignUpWebState extends State<SignUpWeb> {
                                 ),
                                 contentPadding: EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 20),
-                                fillColor: const Color(0xFFE0E0E0),
-                                focusColor: const Color(0xFFBFBFBD),
+                                fillColor: Colors.grey[200],
+                                focusColor: Colors.grey[300],
                                 filled: true,
                                 hintStyle: TextStyle(
                                   color: Colors.grey[600],
@@ -148,6 +171,19 @@ class _SignUpWebState extends State<SignUpWeb> {
                                   ),
                                 ),
                               ),
+                              onChanged: (value) {
+                                setState(() => _email = value);
+                              },
+                              // Validate if email is not empty and is in a valid format
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Indique seu endereço de email';
+                                } else if (!EmailValidator.validate(_email
+                                    .replaceAll(new RegExp(r"\s+"), ''))) {
+                                  return 'Indique um endereço de email válido';
+                                }
+                                return null;
+                              },
                             ),
                           ),
                           Container(
@@ -171,8 +207,8 @@ class _SignUpWebState extends State<SignUpWeb> {
                                 ),
                                 contentPadding: EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 20),
-                                fillColor: const Color(0xFFE0E0E0),
-                                focusColor: const Color(0xFFBFBFBD),
+                                fillColor: Colors.grey[200],
+                                focusColor: Colors.grey[300],
                                 filled: true,
                                 hintStyle: TextStyle(
                                   color: Colors.grey[600],
@@ -198,6 +234,23 @@ class _SignUpWebState extends State<SignUpWeb> {
                                   ),
                                 ),
                               ),
+                              onChanged: (value) {
+                                setState(() => _password = value);
+                              },
+                              // Validate if password is not empty and is strong
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Indique a sua senha';
+                                } else if (value.length < 6) {
+                                  return 'Senha deve conter 6 caracteres ou mais';
+                                } else if (!(new RegExp(
+                                        r'^(?=.*[A-Z].*)(?=.*[0-9].*)(?=.*[a-z].*).{6,64}$',
+                                        multiLine: true)
+                                    .hasMatch(value))) {
+                                  return 'Senha deve conter letras minúsculas, maiúsculas e números';
+                                }
+                                return null;
+                              },
                             ),
                           ),
                           Container(
@@ -221,8 +274,8 @@ class _SignUpWebState extends State<SignUpWeb> {
                                 ),
                                 contentPadding: EdgeInsets.symmetric(
                                     horizontal: 20.0, vertical: 20),
-                                fillColor: const Color(0xFFE0E0E0),
-                                focusColor: const Color(0xFFBFBFBD),
+                                fillColor: Colors.grey[200],
+                                focusColor: Colors.grey[300],
                                 filled: true,
                                 hintStyle: TextStyle(
                                   color: Colors.grey[600],
@@ -248,6 +301,18 @@ class _SignUpWebState extends State<SignUpWeb> {
                                   ),
                                 ),
                               ),
+                              onChanged: (value) {
+                                setState(() => _passwordConfirmation = value);
+                              },
+                              // Validate if passwords match
+                              validator: (value) {
+                                if (value.isEmpty) {
+                                  return 'Repita a senha';
+                                } else if (value != _password) {
+                                  return 'Senhas não combinam';
+                                }
+                                return null;
+                              },
                             ),
                           ),
                           Container(
@@ -264,7 +329,26 @@ class _SignUpWebState extends State<SignUpWeb> {
                                   ),
                                 ),
                               ),
-                              onPressed: () => null,
+                              onPressed: () async {
+                                if (_formKey.currentState.validate()) {
+                                  try {
+                                    await SignUp(
+                                            name: _name,
+                                            email: _email.replaceAll(
+                                                new RegExp(r'\s+'), ''),
+                                            password: _passwordConfirmation
+                                                .replaceAll(
+                                                    new RegExp(r'\s+'), ''))
+                                        .signUp();
+                                  } catch (e) {
+                                    await showDialog(
+                                        context: context,
+                                        builder: (BuildContext context) =>
+                                            _buildErrorDialog(context,
+                                                e.toString().substring(11)));
+                                  }
+                                }
+                              },
                               child: Text(
                                 'Criar',
                                 style: TextStyle(
@@ -319,4 +403,50 @@ class _SignUpWebState extends State<SignUpWeb> {
       ),
     );
   }
+}
+
+// Build error dialog with error detail
+Widget _buildErrorDialog(BuildContext context, String errorDetail) {
+  return AlertDialog(
+    title: Text(
+      'Erro',
+      style: TextStyle(
+        fontFamily: 'Mulish',
+        fontStyle: FontStyle.normal,
+        fontSize: 22,
+      ),
+    ),
+    content: Container(
+      width: 400,
+      height: 100,
+      alignment: Alignment.center,
+      child: Stack(
+        children: [
+          Positioned.fill(
+            bottom: 50,
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                errorDetail,
+                style: TextStyle(fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.bottomRight,
+              child: TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: Text(
+                  'Fechar',
+                  style: TextStyle(fontSize: 22),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    ),
+  );
 }
