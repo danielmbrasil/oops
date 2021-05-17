@@ -215,7 +215,26 @@ class _ProfileState extends State<Profile> {
                                   ),
                                 ),
                               ),
-                              onPressed: () => null,
+                              onPressed: () async {
+                                if (_formKey.currentState.validate()) {
+                                  try {
+                                    setState(() => _loading = true);
+                                    User _user = await UsersService(
+                                            name: _name, email: _email)
+                                        .updateUser();
+
+                                    setState(() {
+                                      _name = _user.getName();
+                                      _email = _user.getEmail();
+                                      _loading = false;
+                                    });
+                                  } catch (e) {
+                                    setState(() => _loading = false);
+
+                                    print(e.toString());
+                                  }
+                                }
+                              },
                               child: Text(
                                 'Atualizar Dados',
                                 style: TextStyle(
