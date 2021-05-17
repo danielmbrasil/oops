@@ -16,10 +16,7 @@ class SignIn {
 
   Future<dynamic> signIn() async {
     Map<String, dynamic> body = {
-      'user' : {
-        'email': this.email,
-        'password': this.password
-      }
+      'user': {'email': this.email, 'password': this.password}
     };
 
     final response = await http.post(url,
@@ -42,7 +39,12 @@ class SignIn {
       await storage.write(key: 'jwt', value: token);
       await storage.write(key: 'user_id', value: this.id.toString());
 
-      final data = {'id': this.id, 'name': this.name, 'email': this.email, 'token': token};
+      final data = {
+        'id': this.id,
+        'name': this.name,
+        'email': this.email,
+        'token': token
+      };
 
       return User.fromJson(data);
     } else if (response.statusCode == 401) {
@@ -50,6 +52,24 @@ class SignIn {
       Map<String, dynamic> data = jsonDecode(response.body);
 
       throw Exception(data['error']);
+    }
+  }
+
+  void signOut() async {
+    try {
+      final _url = Uri.parse('http://10.0.2.2:3000/api/logout');
+
+      final response = await http.delete(_url, headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      });
+
+      if (response.statusCode == 204) {
+        // remove user token from storage
+        final _storage = new FlutterSecureStorage();
+        _storage.delete(key: 'jwt');
+      }
+    } catch (e) {
+      throw Exception('Some error ocurred');
     }
   }
 }
