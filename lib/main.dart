@@ -43,9 +43,8 @@ class _CheckTokenState extends State<CheckToken> {
       // get token and user_id
       final storage = new FlutterSecureStorage();
       String token = await storage.read(key: 'jwt');
-      String id = await storage.read(key: 'user_id');
 
-      final url = Uri.parse('http://10.0.2.2:3000/api/users/' + id);
+      final url = Uri.parse('http://10.0.2.2:3000/api/users/user');
 
       final response = await http.get(url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',

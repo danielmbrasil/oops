@@ -8,7 +8,6 @@ class SignIn {
   final String email;
   final String password;
   String name;
-  int id;
 
   final url = Uri.parse('http://10.0.2.2:3000/api/login');
 
@@ -32,15 +31,12 @@ class SignIn {
       var rBody = jsonDecode(response.body);
 
       this.name = rBody['data']['attributes']['name'];
-      this.id = int.parse(rBody['data']['id']);
 
-      // save token and user_id
+      // save token
       final storage = new FlutterSecureStorage();
       await storage.write(key: 'jwt', value: token);
-      await storage.write(key: 'user_id', value: this.id.toString());
 
       final data = {
-        'id': this.id,
         'name': this.name,
         'email': this.email,
         'token': token
