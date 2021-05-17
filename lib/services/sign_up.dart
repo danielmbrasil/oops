@@ -8,6 +8,7 @@ class SignUp {
   final String name;
   final String email;
   final String password;
+  int id;
 
   final url = Uri.parse('http://10.0.2.2:3000/api/signup');
 
@@ -31,13 +32,16 @@ class SignUp {
     if (response.statusCode == 200) {
       // get user token
       Map<String, dynamic> header = response.headers;
-      String token = header['Authorization'];
+      String token = header['authorization'];
+      var rBody = jsonDecode(response.body);
+      this.id = int.parse(rBody['data']['id']);
 
-      // save token
+      // save token and user id
       final storage = new FlutterSecureStorage();
       await storage.write(key: 'jwt', value: token);
+      await storage.write(key: 'user_id', value: this.id.toString());
 
-      final data = {'name': this.name, 'email': this.email, 'token': token};
+      final data = {'id': this.id, 'name': this.name, 'email': this.email, 'token': token};
 
       return User.fromJson(data);
     } else if (response.statusCode == 400) {
