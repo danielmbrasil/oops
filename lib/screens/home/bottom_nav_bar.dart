@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:oops/screens/home/profile.dart';
+import 'package:oops/screens/home/statistics.dart';
 
 class BottomNavBar extends StatefulWidget {
   const BottomNavBar({Key key}) : super(key: key);
@@ -9,7 +10,7 @@ class BottomNavBar extends StatefulWidget {
 }
 
 class _BottomNavBarState extends State<BottomNavBar> {
-  final List _screens = [Scaffold(), Scaffold(), Scaffold(), Profile()];
+  final List _screens = [Scaffold(), Statistics(), Scaffold(), Profile()];
 
   int _index = 0;
 
