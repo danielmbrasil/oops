@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:oops/screens/activities/activity.dart';
 import 'package:pie_chart/pie_chart.dart';
 
 class Home extends StatefulWidget {
@@ -15,7 +16,10 @@ class _HomeState extends State<Home> {
     };
 
     return MaterialButton(
-      onPressed: () {},
+      onPressed: () async {
+        await Navigator.push(
+            context, MaterialPageRoute(builder: (context) => Activity()));
+      },
       shape: CircleBorder(),
       child: PieChart(
         dataMap: dataMap,
