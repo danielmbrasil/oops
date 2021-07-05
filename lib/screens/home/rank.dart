@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:oops/screens/shared/wave_loading.dart';
+import 'package:oops/services/users.dart';
 
 class Rank extends StatefulWidget {
   @override
@@ -6,163 +8,189 @@ class Rank extends StatefulWidget {
 }
 
 class _RankState extends State<Rank> {
-  List<Map<String, String>> _firstThree = [
-    {'position': '1', 'name': 'Daniel M Brasil'},
-    {'position': '2', 'name': 'Heidy Simbaqueaba'},
-    {'position': '3', 'name': 'Willy'}
-  ];
+  bool _loading = true;
 
-  List<Map<String, String>> _rank = [
-    {'position': '4', 'name': 'Whatsapp Jr'},
-    {'position': '5', 'name': 'Telegram Jr'},
-    {'position': '6', 'name': 'Mr LinkedIn'},
-    {'position': '7', 'name': 'Nubank Jr'},
-    {'position': '8', 'name': 'Nubank Jr'},
-    {'position': '9', 'name': 'Nubank Jr'},
-    {'position': '10', 'name': 'Nubank Jr'},
-    {'position': '11', 'name': 'Nubank Jr'},
-    {'position': '12', 'name': 'Nubank Jr'},
-    {'position': '13', 'name': 'Nubank Jr'},
-    {'position': '14', 'name': 'Nubank Jr'},
-    {'position': '15', 'name': 'Nubank Jr'},
-    {'position': '16', 'name': 'Nubank Jr'},
-    {'position': '17', 'name': 'Nubank Jr'},
-    {'position': '18', 'name': 'Nubank Jr'},
-  ];
+  List<Map<String, dynamic>> _rank = [];
+
+  void _fetchUsers() async {
+    try {
+      var users = await UsersService().fetchUsers();
+      print(users);
+      setState(() {
+        _rank = List.from(users);
+        _loading = false;
+      });
+    } catch (e) {
+      setState(() => _loading = false);
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUsers();
+  }
 
   @override
   Widget build(BuildContext context) {
     var _screenWidth = MediaQuery.of(context).size.width;
     var _screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
-      body: ListView(
-        padding: EdgeInsets.all(20),
-        children: [
-          SizedBox(height: 20),
-          Container(
-            width: _screenWidth,
-            height: _screenHeight * 0.35,
-            child: Stack(
+    return _loading
+        ? WaveLoading()
+        : Scaffold(
+            body: ListView(
+              padding: EdgeInsets.all(20),
               children: [
-                Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: InkWell(
-                    child: Container(
-                      width: _screenWidth * 0.18,
-                      height: _screenHeight * 0.18,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/gold.png'),
+                SizedBox(height: 20),
+                Container(
+                  width: _screenWidth,
+                  height: _screenHeight * 0.35,
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        child: InkWell(
+                          child: Container(
+                            width: _screenWidth * 0.18,
+                            height: _screenHeight * 0.18,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage('assets/images/gold.png'),
+                              ),
+                            ),
+                          ),
+                          onTap: _rank.length > 0
+                              ? () async {
+                                  await showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          _buildDialog(
+                                              context,
+                                              _rank.elementAt(0)['name'],
+                                              'gold.png',
+                                              _screenWidth));
+                                }
+                              : null,
                         ),
                       ),
-                    ),
-                    onTap: () async {
-                      await showDialog(
-                          context: context,
-                          builder: (BuildContext context) => _buildDialog(
-                              context,
-                              _firstThree.elementAt(0)['name'],
-                              'gold.png',
-                              _screenWidth));
-                    },
-                  ),
-                ),
-                Positioned(
-                  left: 20,
-                  bottom: 0,
-                  child: InkWell(
-                    child: Container(
-                      alignment: Alignment.centerLeft,
-                      width: _screenWidth * 0.25,
-                      height: _screenHeight * 0.25,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/plate.png'),
+                      Positioned(
+                        left: 20,
+                        bottom: 0,
+                        child: InkWell(
+                          child: Container(
+                            alignment: Alignment.centerLeft,
+                            width: _screenWidth * 0.25,
+                            height: _screenHeight * 0.25,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage('assets/images/plate.png'),
+                              ),
+                            ),
+                          ),
+                          onTap: _rank.length > 1
+                              ? () async {
+                                  await showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          _buildDialog(
+                                              context,
+                                              _rank.elementAt(1)['name'],
+                                              'plate.png',
+                                              _screenWidth));
+                                }
+                              : null,
                         ),
                       ),
-                    ),
-                    onTap: () async {
-                      await showDialog(
-                          context: context,
-                          builder: (BuildContext context) => _buildDialog(
-                              context,
-                              _firstThree.elementAt(1)['name'],
-                              'plate.png',
-                              _screenWidth));
-                    },
-                  ),
-                ),
-                Positioned(
-                  right: 20,
-                  bottom: 0,
-                  child: InkWell(
-                    child: Container(
-                      alignment: Alignment.centerRight,
-                      width: _screenWidth * 0.25,
-                      height: _screenHeight * 0.25,
-                      decoration: BoxDecoration(
-                        image: DecorationImage(
-                          image: AssetImage('assets/images/silver.png'),
+                      Positioned(
+                        right: 20,
+                        bottom: 0,
+                        child: InkWell(
+                          child: Container(
+                            alignment: Alignment.centerRight,
+                            width: _screenWidth * 0.25,
+                            height: _screenHeight * 0.25,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                image: AssetImage('assets/images/silver.png'),
+                              ),
+                            ),
+                          ),
+                          onTap: _rank.length > 2
+                              ? () async {
+                                  await showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) =>
+                                          _buildDialog(
+                                              context,
+                                              _rank.elementAt(2)['name'],
+                                              'silver.png',
+                                              _screenWidth));
+                                }
+                              : null,
                         ),
                       ),
-                    ),
-                    onTap: () async {
-                      await showDialog(
-                          context: context,
-                          builder: (BuildContext context) => _buildDialog(
-                              context,
-                              _firstThree.elementAt(2)['name'],
-                              'silver.png',
-                              _screenWidth));
-                    },
+                    ],
                   ),
                 ),
+                Container(
+                  height: _rank.length * 57.0,
+                  width: _screenWidth,
+                  decoration: BoxDecoration(
+                    color: Colors.grey.shade200,
+                    borderRadius: BorderRadius.all(
+                      Radius.circular(20),
+                    ),
+                  ),
+                  child: Column(
+                    children: [
+                      ..._rank.sublist(2)
+                          .asMap()
+                          .map(
+                            (i, e) => MapEntry(
+                              i,
+                              ListTile(
+                                leading: Text(
+                                  i.toString(),
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                title: Text(
+                                  e['name'],
+                                  style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w500),
+                                ),
+                                trailing: Icon(
+                                  Icons.star,
+                                  size: 30,
+                                  color: Colors.yellow[700],
+                                ),
+                              ),
+                            ),
+                          )
+                          .values
+                          .toList(),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 50),
               ],
             ),
-          ),
-          Container(
-            height: _rank.length * 57.0,
-            width: _screenWidth,
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.all(
-                Radius.circular(20),
-              ),
-            ),
-            child: Column(
-              children: [
-                ..._rank.map(
-                  (e) => ListTile(
-                    leading: Text(
-                      e['position'],
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                    ),
-                    title: Text(
-                      e['name'],
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-                    ),
-                    trailing: Icon(
-                      Icons.star,
-                      size: 30,
-                      color: Colors.yellow[700],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: 50),
-        ],
-      ),
-    );
+          );
   }
 }
 
+/// Builds dialog for top 3 with their medal and name
+/// @param 1: BuildContext
+/// @param 2: user's name
+/// @param 3: user's medal (i.e., gold, plate, silver) followed by .png
+/// @param 4: width of screen returned by MediaQuery
+///
+/// @return AlertDialog with user's medal and their name
 Widget _buildDialog(
     BuildContext context, String name, String medal, double screenWidth) {
   return AlertDialog(
