@@ -15,7 +15,6 @@ class _RankState extends State<Rank> {
   void _fetchUsers() async {
     try {
       var users = await UsersService().fetchUsers();
-      print(users);
       setState(() {
         _rank = List.from(users);
         _loading = false;
@@ -144,38 +143,41 @@ class _RankState extends State<Rank> {
                       Radius.circular(20),
                     ),
                   ),
-                  child: Column(
-                    children: [
-                      ..._rank.sublist(2)
-                          .asMap()
-                          .map(
-                            (i, e) => MapEntry(
-                              i,
-                              ListTile(
-                                leading: Text(
-                                  i.toString(),
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                title: Text(
-                                  e['name'],
-                                  style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w500),
-                                ),
-                                trailing: Icon(
-                                  Icons.star,
-                                  size: 30,
-                                  color: Colors.yellow[700],
-                                ),
-                              ),
-                            ),
-                          )
-                          .values
-                          .toList(),
-                    ],
-                  ),
+                  child: _rank.length < 2
+                      ? Container()
+                      : Column(
+                          children: [
+                            ..._rank
+                                .sublist(3)
+                                .asMap()
+                                .map(
+                                  (i, e) => MapEntry(
+                                    i,
+                                    ListTile(
+                                      leading: Text(
+                                        (i + 4).toString(),
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      title: Text(
+                                        e['name'],
+                                        style: TextStyle(
+                                            fontSize: 20,
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                      trailing: Icon(
+                                        Icons.star,
+                                        size: 30,
+                                        color: Colors.yellow[700],
+                                      ),
+                                    ),
+                                  ),
+                                )
+                                .values
+                                .toList(),
+                          ],
+                        ),
                 ),
                 SizedBox(height: 50),
               ],

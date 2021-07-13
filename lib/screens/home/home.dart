@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:oops/screens/activities/activity.dart';
-import 'package:pie_chart/pie_chart.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -8,30 +7,29 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Widget _activityButton(
-      int activityNumber, double screenWidth, double progress) {
-    Map<String, double> dataMap = {
-      "completed": progress,
-      "not completed": 1 - progress
-    };
-
-    return MaterialButton(
-      onPressed: () async {
+  Widget _activityButton(int activityNumber, double screenWidth) {
+    return InkWell(
+      onTap: () async {
         await Navigator.push(
-            context, MaterialPageRoute(builder: (context) => Activity()));
+            context,
+            MaterialPageRoute(
+                builder: (context) => Activity(currentLevel: activityNumber)));
       },
-      shape: CircleBorder(),
-      child: PieChart(
-        dataMap: dataMap,
-        chartRadius: screenWidth * 0.3,
-        colorList: <Color>[Colors.blue[800], Colors.blue[500]],
-        initialAngleInDegree: 180,
-        chartType: ChartType.disc,
-        legendOptions: LegendOptions(
-          showLegends: false,
+      child: Container(
+        width: screenWidth * 0.3,
+        height: screenWidth * 0.3,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          color: Colors.blue[500],
+          shape: BoxShape.circle,
         ),
-        chartValuesOptions: ChartValuesOptions(
-          showChartValues: false,
+        child: Text(
+          activityNumber.toString(),
+          style: TextStyle(
+            fontSize: 30,
+            color: Colors.white,
+            fontWeight: FontWeight.w500,
+          ),
         ),
       ),
     );
@@ -47,17 +45,17 @@ class _HomeState extends State<Home> {
         padding: EdgeInsets.symmetric(vertical: 20),
         children: [
           SizedBox(height: 20),
-          _activityButton(1, _screenWidth, 0.6),
+          _activityButton(1, _screenWidth),
           SizedBox(height: 20),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              _activityButton(2, _screenWidth, 0.2),
-              _activityButton(3, _screenWidth, 0),
+              _activityButton(2, _screenWidth),
+              _activityButton(3, _screenWidth),
             ],
           ),
           SizedBox(height: 20),
-          _activityButton(4, _screenWidth, 0),
+          _activityButton(4, _screenWidth),
           SizedBox(height: 10),
           Container(
             alignment: Alignment.bottomCenter,

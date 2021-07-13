@@ -109,13 +109,13 @@ class _StatisticsState extends State<Statistics> {
               children: [
                 SizedBox(height: 20),
                 _customContainer(_screenWidth, _screenHeight, 'XP',
-                    _xp + '/500', int.parse(_xp) / 500.0),
+                    _xp + '/360', int.parse(_xp) / 360.0),
                 SizedBox(height: 20),
                 _customContainer(_screenWidth, _screenHeight, 'Nível',
-                    _currentLevel + '/4', int.parse(_currentLevel) + 1 / 4.0),
+                    _currentLevel + '/4', int.parse(_currentLevel) / 4.0),
                 SizedBox(height: 20),
                 _customContainer(_screenWidth, _screenHeight, 'Quiz',
-                    _correctAnswers + '/50', int.parse(_correctAnswers) / 50.0),
+                    _correctAnswers + '/31', int.parse(_correctAnswers) / 31.0),
                 SizedBox(height: 50)
               ],
             ),
