@@ -19,6 +19,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: CheckToken(),
+      routes: <String, WidgetBuilder> {
+        '/home': (BuildContext context) => BottomNavBar()
+      },
     );
   }
 }

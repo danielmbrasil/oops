@@ -8,12 +8,14 @@ class SignIn {
   final String email;
   final String password;
   String name;
-
-  final url = Uri.parse('http://10.0.2.2:3000/api/login');
+  final String _baseURL = 'http://10.0.2.2:3000';
 
   SignIn({this.email, this.password});
 
   Future<dynamic> signIn() async {
+
+    final url = Uri.parse(_baseURL + '/api/login');
+
     Map<String, dynamic> body = {
       'user': {'email': this.email, 'password': this.password}
     };
@@ -53,7 +55,7 @@ class SignIn {
 
   void signOut() async {
     try {
-      final _url = Uri.parse('http://10.0.2.2:3000/api/logout');
+      final _url = Uri.parse(_baseURL + '/api/logout');
 
       final response = await http.delete(_url, headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
