@@ -149,4 +149,75 @@ class UsersService {
       throw Exception('Some error ocurred');
     }
   }
+
+  /// Save user feedback on activity
+  ///
+  /// @param 1 level to which activity belongs to
+  /// @param 2 user's grade to activity
+  ///
+  /// @return JSON with user's grade
+  Future<dynamic> postUserFeedback(int currentLevel, int grade) async {
+    try {
+      // get token and user_id
+      final _storage = new FlutterSecureStorage();
+      String _token = await _storage.read(key: 'jwt');
+
+      Map<String, dynamic> params = {
+        'level_number': currentLevel.toString(),
+        'grade': grade.toString()
+      };
+
+      final _url = Uri.http('10.0.2.2:3000', '/api/users/feedback', params);
+
+      final response = await http.post(
+        _url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': _token
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var rBody = jsonDecode(response.body);
+
+        return rBody['data']['grade'];
+      }
+    } catch (e) {
+      throw Exception('Some error ocurred');
+    }
+  }
+
+  /// Get user's feedback on actitivy. If not found, throws an Exception
+  ///
+  /// @param 1 level number
+  /// @return JSON with user's grade
+  Future<dynamic> getUserFeedback(int currentLevel) async {
+    try {
+      // get token and user_id
+      final _storage = new FlutterSecureStorage();
+      String _token = await _storage.read(key: 'jwt');
+
+      Map<String, dynamic> params = {'level_number': currentLevel.toString()};
+
+      final _url = Uri.http('10.0.2.2:3000', '/api/users/feedback', params);
+
+      final response = await http.get(
+        _url,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': _token
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var rBody = jsonDecode(response.body);
+
+        return rBody['data']['grade'];
+      } else {
+        throw new Exception('Grade not found.');
+      }
+    } catch (e) {
+      throw Exception('Some error ocurred');
+    }
+  }
 }

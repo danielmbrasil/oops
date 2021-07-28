@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:oops/screens/activities/introduction.dart';
 import 'package:oops/screens/activities/quiz.dart';
+import 'package:oops/screens/activities/rate_activity.dart';
 import 'package:oops/screens/shared/wave_loading.dart';
 import 'package:oops/services/quizzes.dart';
 
@@ -145,7 +146,13 @@ class _ActivityState extends State<Activity> {
                   alignment: Alignment.centerLeft,
                   padding: EdgeInsets.only(left: 6),
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () async {
+                      await Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RateActivity(
+                                  currentLevel: widget.currentLevel)));
+                    },
                     child: Text(
                       'Avaliar atividade',
                       style: _textStyle,
