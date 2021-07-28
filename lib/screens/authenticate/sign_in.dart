@@ -193,19 +193,6 @@ class _SignInState extends State<SignIn> {
                                   ),
                                 ),
                                 Container(
-                                  alignment: Alignment.centerLeft,
-                                  padding: EdgeInsets.only(top: 10),
-                                  child: Text(
-                                    'Esqueceu a sua senha?',
-                                    style: TextStyle(
-                                      color: Colors.blue,
-                                      fontFamily: 'Mulish',
-                                      fontStyle: FontStyle.normal,
-                                      fontSize: 16,
-                                    ),
-                                  ),
-                                ),
-                                Container(
                                   height: 80,
                                   padding: EdgeInsets.only(
                                       left: 40, right: 40, top: 20),
