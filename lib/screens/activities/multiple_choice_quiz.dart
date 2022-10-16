@@ -203,36 +203,6 @@ class _MultipleChoiceQuizState extends State<MultipleChoiceQuiz> {
       padding: EdgeInsets.symmetric(vertical: 20),
       child: Stack(
         children: [
-          Positioned.fill(
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Flexible(
-                    child: Text(
-                      widget.data[widget.index]['question_number'].toString() +
-                          '. ' +
-                          widget.data[widget.index]['title'],
-                      style:
-                          TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  _buildAlternativesRow(
-                      widget.data[widget.index]['option_a'], _screenWidth, 1),
-                  _buildAlternativesRow(
-                      widget.data[widget.index]['option_b'], _screenWidth, 2),
-                  _buildAlternativesRow(
-                      widget.data[widget.index]['option_c'], _screenWidth, 3),
-                  _buildAlternativesRow(
-                      widget.data[widget.index]['option_d'], _screenWidth, 4),
-                ],
-              ),
-            ),
-          ),
           widget.index > 0
               ? Positioned.fill(
                   left: -10,
@@ -332,6 +302,36 @@ class _MultipleChoiceQuizState extends State<MultipleChoiceQuiz> {
                   ),
                 )
               : Container(),
+          Positioned.fill(
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Flexible(
+                    child: Text(
+                      widget.data[widget.index]['question_number'].toString() +
+                          '. ' +
+                          widget.data[widget.index]['title'],
+                      style:
+                      TextStyle(fontSize: 22, fontWeight: FontWeight.w500),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  _buildAlternativesRow(
+                      widget.data[widget.index]['option_a'], _screenWidth, 1),
+                  _buildAlternativesRow(
+                      widget.data[widget.index]['option_b'], _screenWidth, 2),
+                  _buildAlternativesRow(
+                      widget.data[widget.index]['option_c'], _screenWidth, 3),
+                  _buildAlternativesRow(
+                      widget.data[widget.index]['option_d'], _screenWidth, 4),
+                ],
+              ),
+            ),
+          ),
           Positioned.fill(
             right: 20,
             child: Align(

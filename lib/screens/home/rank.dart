@@ -143,7 +143,7 @@ class _RankState extends State<Rank> {
                       Radius.circular(20),
                     ),
                   ),
-                  child: _rank.length < 2
+                  child: _rank.length < 3
                       ? Container()
                       : Column(
                           children: [
